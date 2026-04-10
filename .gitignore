@@ -1,0 +1,25 @@
+# Virtual Environment
+venv_isaac/
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Isaac Sim Installers / Logs
+python-3.10.11-amd64.exe
+install_log.txt
+
+# Local Isaac Sim data (if generated)
+*.usd
+*.usda
+*.usdc
+logs/
+screenshots/

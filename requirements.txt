@@ -1,0 +1,16 @@
+--index-url https://pypi.org/simple
+--extra-index-url https://download.pytorch.org/whl/cu128
+--extra-index-url https://pypi.nvidia.com
+
+# Core dependencies
+torch==2.7.0
+torchvision==0.22.0
+isaacsim[all,extscache]==4.5.0.0
+
+# Other common simulation libraries
+numpy==1.26.4
+scipy==1.15.3
+matplotlib==3.10.8
+gymnasium==1.2.3
+pyyaml==6.0.3
+opencv-python==4.11.0.86
