@@ -2,14 +2,13 @@ import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 from isaacsim import SimulationApp
-# Start Isaac Sim with GUI
 simulation_app = SimulationApp({"headless": False})
 
 import numpy as np
 from isaacsim.core.api import World
 from isaacsim.robot.manipulators.examples.franka import Franka
 from isaacsim.core.api.objects import DynamicCuboid
-from isaacsim.robot.manipulators.examples.franka import FrankaController
+from isaacsim.robot.manipulators.examples.franka.controllers.pick_place_controller import PickPlaceController
 
 # 1. Setup the World
 world = World(stage_units_in_meters=1.0)
@@ -24,27 +23,36 @@ franka = world.scene.add(
     )
 )
 
-# 3. Add a Cube to pick up
+# 3. Add a Cube with better physics properties
 cube = world.scene.add(
     DynamicCuboid(
         prim_path="/World/Cube",
         name="my_cube",
-        position=np.array([0.5, 0.2, 0.05]), # Position in front of the robot
-        scale=np.array([0.05, 0.05, 0.05]), # 5cm cube
-        color=np.array([1.0, 0.0, 0.0]) # Red color
+        position=np.array([0.5, 0.2, 0.1]), # Start higher (10cm) to drop safely
+        scale=np.array([0.05, 0.05, 0.05]),
+        color=np.array([1.0, 0.0, 0.0]),
+        mass=0.2 # Heavier cube is more stable
     )
 )
 
-# 4. Initialize the Pick and Place Controller
-# This is a high-level controller that handles the sequence of movements
-controller = FrankaController(name="pick_and_place_controller", deterministic_flag=True)
-
+# 4. Initialize the Controller
 world.reset()
 
-print("\n--- Starting Pick and Place Simulation ---")
-print("The robot will now attempt to pick up the red cube and move it.")
+# Specialized Franka PickPlaceController
+controller = PickPlaceController(
+    name="pick_place_controller",
+    gripper=franka.gripper,
+    robot_articulation=franka
+)
 
-i = 0
+# Define goal position for the cube
+goal_position = np.array([0.5, -0.2, 0.05])
+
+print("\n" + "🚀" * 10)
+print("ISAAC SIM 4.5.0 ACTIVE - PICK AND PLACE")
+print("Physics tuned: Cube mass increased for stability.")
+print("🚀" * 10 + "\n")
+
 while simulation_app.is_running():
     world.step(render=True)
     
@@ -53,25 +61,23 @@ while simulation_app.is_running():
             world.reset()
             controller.reset()
         
-        # Get current state
-        observations = world.get_observations()
+        cube_pos, _ = cube.get_world_pose()
         
-        # Define the target: pick the cube at its current position and place it elsewhere
-        # Logic: every 500 steps, we re-calculate or trigger actions
-        # In a real scenario, we would use a state machine
-        
-        # This simple example uses the built-in Franka controller for basic tasks
-        # For a full pick-and-place, we usually define a sequence of targets
-        
-        # Let's make it simple: move the end-effector to the cube
-        cube_position, _ = cube.get_world_pose()
-        
-        # Apply actions from the controller to reach the cube
+        # Get actions
         actions = controller.forward(
-            target_end_effector_position=cube_position + np.array([0, 0, 0.02]), # Slightly above cube
-            target_end_effector_orientation=None
+            picking_position=cube_pos,
+            placing_position=goal_position,
+            current_joint_positions=franka.get_joint_positions()
         )
         
+        # Apply the action
         franka.apply_action(actions)
+        
+        if world.current_time_step_index % 100 == 0:
+            print(f"[STATUS] Step: {world.current_time_step_index} | Action phase: {controller.get_current_event()}")
+            
+        if controller.is_done():
+            print("\n✅ TASK COMPLETED SUCCESSFULLY!")
+            world.pause()
 
 simulation_app.close()
