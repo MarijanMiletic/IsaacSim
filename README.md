@@ -48,6 +48,8 @@ pip install -r requirements.txt
 You can easily start the simulations using the provided batch scripts (no need to manually activate the virtual environment):
 
 - **`run_franka.bat`**: Starts the main Franka Pick and Place visual simulation.
+- **`run_ur10.bat`**: Starts the basic UR10 robot simulation with a sine wave joint animation.
+- **`run_ur10_tracking.bat`**: Starts the advanced UR10 Dynamic Pick & Throw simulation using Inverse Kinematics.
 - **`run_headless.bat`**: Starts the physics engine test in headless mode.
 
 Alternatively, you can run them manually from your activated environment:
@@ -61,12 +63,22 @@ python franka_example.py
 
 # Run the OOP Franka Pick and Place simulation
 python franka_pick_and_place.py
+
+# Run the basic UR10 simulation
+python ur10_example.py
+
+# Run the UR10 Dynamic Pick & Throw tracking simulation
+python ur10_tracking.py
 ```
 
 ## Project Structure
 - `franka_pick_and_place.py`: Main Franka robot arm simulation (OOP structure).
+- `ur10_example.py`: Basic Universal Robots UR10 example.
+- `ur10_tracking.py`: Advanced UR10 simulation using Inverse Kinematics (IK) for dynamic picking.
 - `test_isaac.py`: Basic connectivity and simulation test.
 - `franka_example.py`: Franka robot arm minimal example.
 - `test_headless_sim.py`: Script for running simulations without a GUI.
+- `test_ur10_headless.py`: Headless testing script for the UR10 simulation.
+- `test_ik_headless.py`: Headless testing script for the IK tracking simulation.
 - `check_env.py`: Utility to verify your Python and CUDA environment.
-- `run_franka.bat` / `run_headless.bat`: 1-click startup scripts.
+- `run_*.bat`: 1-click startup scripts.
