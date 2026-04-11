@@ -1,84 +1,86 @@
-# NVIDIA Isaac Sim Project
+# 🤖 NVIDIA Isaac Sim Project
 
-This repository contains robot simulation scripts using NVIDIA Isaac Sim 4.5.0.
+[![NVIDIA Isaac Sim](https://img.shields.io/badge/Isaac_Sim-4.5.0-76B900?logo=nvidia&logoColor=white)](https://developer.nvidia.com/isaac-sim)
+[![Python](https://img.shields.io/badge/Python-3.10.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.7.0%2Bcu128-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
 
-## Overview
-The main highlight of this project is a pick-and-place simulation using the **Franka Emika** robot arm. The project utilizes modern object-oriented programming (OOP) practices for the main simulation script and silences verbose internal Isaac Sim logs for a cleaner terminal output.
+This repository contains advanced robotics simulation scripts using **NVIDIA Isaac Sim 4.5.0**. It focuses on modern Object-Oriented Programming (OOP) practices, Inverse Kinematics (IK), and dynamic real-time target tracking for industrial robot arms (Franka Emika and UR10).
 
-## Prerequisites
+---
+
+## 🎥 Demonstrations
+
+*(To complete your README, you can record short GIFs/Videos of your simulations and place the links below!)*
+
+### 1. UR10 Dynamic Pick & Throw (Inverse Kinematics)
+The UR10 robot dynamically tracks a cube falling from 1.5m in the air, waits for it to settle, and uses an S-Curve smoothed Inverse Kinematics solver to accurately pick and move it to a target zone.
+
+> **[Insert Video / GIF here: e.g. `![UR10 Pick and Throw](assets/ur10_demo.gif)`]**
+
+### 2. Franka Emika Pick and Place
+A classic pick-and-place operation using the built-in PickPlaceController for the Franka Emika Panda arm.
+
+> **[Insert Video / GIF here: e.g. `![Franka Pick and Place](assets/franka_demo.gif)`]**
+
+---
+
+## 🚀 Running the Simulations
+
+You can easily start the simulations using the provided **1-click batch scripts** (no need to manually activate the virtual environment):
+
+| Simulation | Script to Run | Description |
+| :--- | :--- | :--- |
+| **UR10 Dynamic Pick** | `run_ur10_tracking.bat` | Advanced UR10 simulation using IK to dynamically track, pick, and throw a cube. |
+| **UR10 Basic Animation**| `run_ur10.bat` | Basic UR10 simulation with a custom sine-wave joint animation. |
+| **Franka Pick & Place** | `run_franka.bat` | Main Franka robot arm simulation using built-in controllers. |
+| **Headless Physics Test**| `run_headless.bat` | Starts the background physics engine test without a GUI. |
+
+Alternatively, you can run them manually from your activated environment:
+```powershell
+python ur10_tracking.py
+python franka_pick_and_place.py
+```
+
+---
+
+## 🛠️ Installation & Prerequisites
 
 - **OS:** Windows 10/11 (with NVIDIA GPU)
 - **Python:** 3.10.11
 - **NVIDIA Drivers:** Latest drivers supporting CUDA 12.8+
 
-## Installation
-
 Follow these steps to replicate the environment used in this project:
 
 ### 1. Create a Virtual Environment
-It is highly recommended to use a virtual environment to manage dependencies:
 ```powershell
-# Create the environment
 python -m venv venv_isaac
-
-# Activate it (Windows PowerShell)
 .\venv_isaac\Scripts\activate
 ```
 
 ### 2. Install PyTorch with CUDA 12.8 Support
-Isaac Sim 4.5.0 requires a specific PyTorch version. Install it using the official wheel index:
 ```powershell
 pip install torch==2.7.0 torchvision==0.22.0 --index-url https://download.pytorch.org/whl/cu128
 ```
 
 ### 3. Install NVIDIA Isaac Sim
-Install the main Isaac Sim package and its extensions from the NVIDIA PyPI repository:
 ```powershell
 pip install "isaacsim[all,extscache]==4.5.0.0" --extra-index-url https://pypi.nvidia.com
 ```
 
 ### 4. Install Project Requirements
-Install additional libraries like NumPy, SciPy, and Gymnasium:
 ```powershell
 pip install -r requirements.txt
 ```
 
-## Running the Simulation
+---
 
-You can easily start the simulations using the provided batch scripts (no need to manually activate the virtual environment):
+## 📂 Project Structure
 
-- **`run_franka.bat`**: Starts the main Franka Pick and Place visual simulation.
-- **`run_ur10.bat`**: Starts the basic UR10 robot simulation with a sine wave joint animation.
-- **`run_ur10_tracking.bat`**: Starts the advanced UR10 Dynamic Pick & Throw simulation using Inverse Kinematics.
-- **`run_headless.bat`**: Starts the physics engine test in headless mode.
-
-Alternatively, you can run them manually from your activated environment:
-
-```powershell
-# Run the Isaac Sim test script
-python test_isaac.py
-
-# Run the Franka Emika example
-python franka_example.py
-
-# Run the OOP Franka Pick and Place simulation
-python franka_pick_and_place.py
-
-# Run the basic UR10 simulation
-python ur10_example.py
-
-# Run the UR10 Dynamic Pick & Throw tracking simulation
-python ur10_tracking.py
-```
-
-## Project Structure
-- `franka_pick_and_place.py`: Main Franka robot arm simulation (OOP structure).
-- `ur10_example.py`: Basic Universal Robots UR10 example.
-- `ur10_tracking.py`: Advanced UR10 simulation using Inverse Kinematics (IK) for dynamic picking.
-- `test_isaac.py`: Basic connectivity and simulation test.
-- `franka_example.py`: Franka robot arm minimal example.
-- `test_headless_sim.py`: Script for running simulations without a GUI.
-- `test_ur10_headless.py`: Headless testing script for the UR10 simulation.
-- `test_ik_headless.py`: Headless testing script for the IK tracking simulation.
-- `check_env.py`: Utility to verify your Python and CUDA environment.
-- `run_*.bat`: 1-click startup scripts.
+- **`ur10_tracking.py`**: Advanced UR10 simulation using Inverse Kinematics (IK) for dynamic picking.
+- **`ur10_example.py`**: Basic Universal Robots UR10 example.
+- **`franka_pick_and_place.py`**: Main Franka robot arm simulation (OOP structure).
+- **`franka_example.py`**: Franka robot arm minimal example.
+- **`test_isaac.py`**: Basic connectivity and scene generation test.
+- **`test_headless_sim.py`**: Script for running simulations without a GUI.
+- **`test_ur10_headless.py` / `test_ik_headless.py`**: Headless automated testing scripts for CI pipelines.
+- **`check_env.py`**: Utility to verify your Python and CUDA environment.
