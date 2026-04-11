@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  isaac-sim:
+    build: .
+    image: marijanmiletic/isaac-sim-project:latest
+    container_name: isaac_sim_container
+    # Connect your GPU to the container
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    # Map your local project folder for live code changes
+    volumes:
+      - .:/app
+    # Environment variables for GUI access (X11)
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    # Network mode host is often needed for Isaac Sim to talk to sensors/ROS
+    network_mode: "host"
+    # Ensure standard input/output works
+    stdin_open: true
+    tty: true
