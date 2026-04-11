@@ -61,10 +61,14 @@ class UR10Sim:
 
     def run(self):
         """Runs the main simulation loop."""
+        from isaacsim.core.utils.types import ArticulationAction
+        
         print("\n" + "🚀" * 10)
         print("ISAAC SIM 4.5.0 ACTIVE - UR10 EXAMPLE")
-        print("Robot loaded. Simulation running...")
+        print("Robot loaded. Simulation running with custom joint movement...")
         print("🚀" * 10 + "\n")
+
+        time_elapsed = 0.0
 
         while self.simulation_app.is_running():
             self.world.step(render=True)
@@ -72,9 +76,31 @@ class UR10Sim:
             if self.world.is_playing():
                 if self.world.current_time_step_index == 0:
                     self.world.reset()
+                    time_elapsed = 0.0
                 
-                # In this basic example, we just visualize the robot.
-                # In an advanced scenario, you'd use a controller to move the joints.
+                # Calculate time elapsed
+                dt = self.world.get_physics_dt()
+                time_elapsed += dt
+
+                # Create a smooth sine wave movement for all 6 joints of UR10
+                target_positions = np.zeros(self.ur10.num_dof)
+                
+                # Base rotation (Shoulder Pan)
+                target_positions[0] = np.sin(time_elapsed * 0.5) * 1.5 
+                # Shoulder Lift
+                target_positions[1] = -1.5 + np.sin(time_elapsed * 0.8) * 0.5
+                # Elbow
+                target_positions[2] = 1.0 + np.sin(time_elapsed * 0.7) * 0.8
+                # Wrist 1
+                target_positions[3] = -1.0 + np.sin(time_elapsed * 1.2) * 0.5
+                # Wrist 2
+                target_positions[4] = np.sin(time_elapsed * 1.5) * 1.0
+                # Wrist 3
+                target_positions[5] = np.sin(time_elapsed * 2.0) * 1.0
+
+                # Apply the joint positions using the Articulation Controller
+                action = ArticulationAction(joint_positions=target_positions)
+                self.ur10.get_articulation_controller().apply_action(action)
 
         self.cleanup()
         
