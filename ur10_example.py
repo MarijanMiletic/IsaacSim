@@ -40,7 +40,8 @@ class UR10Sim:
             self.UR10(
                 prim_path="/World/UR10",
                 name="my_ur10",
-                position=np.array([0, 0, 0])
+                position=np.array([0, 0, 0]),
+                attach_gripper=True
             )
         )
 
