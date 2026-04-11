@@ -1,25 +1,25 @@
 import sys
 
-print("=== DETALJNA PROVJERA OKRUŽENJA ===")
-print(f"Python verzija: {sys.version}")
+print("=== DETAILED ENVIRONMENT CHECK ===")
+print(f"Python version: {sys.version}")
 
-print("\n--- Provjera PyTorch i CUDA (Grafička Kartica) ---")
+print("\n--- Checking PyTorch and CUDA (GPU) ---")
 try:
     import torch
-    print(f"PyTorch verzija: {torch.__version__}")
-    print(f"CUDA dostupna (GPU ubrzanje): {torch.cuda.is_available()}")
+    print(f"PyTorch version: {torch.__version__}")
+    print(f"CUDA available (GPU acceleration): {torch.cuda.is_available()}")
     if torch.cuda.is_available():
-        print(f"CUDA uređaj: {torch.cuda.get_device_name(0)}")
+        print(f"CUDA device: {torch.cuda.get_device_name(0)}")
 except ImportError:
-    print("Greška: PyTorch nije instaliran.")
+    print("Error: PyTorch is not installed.")
 except Exception as e:
-    print(f"Greška s PyTorchom: {e}")
+    print(f"Error with PyTorch: {e}")
 
-print("\n--- Provjera Isaac Sim modula ---")
+print("\n--- Checking Isaac Sim modules ---")
 try:
     import isaacsim
-    print("Isaac Sim modul: USPJEŠNO PRONAĐEN")
+    print("Isaac Sim module: SUCCESSFULLY FOUND")
 except ImportError:
-    print("Greška: Isaac Sim modul nije instaliran.")
+    print("Error: Isaac Sim module is not installed.")
 except Exception as e:
-    print(f"Greška pri učitavanju Isaac Sim modula: {e}")
+    print(f"Error loading Isaac Sim module: {e}")

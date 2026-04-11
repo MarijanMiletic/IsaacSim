@@ -1,43 +1,49 @@
 import os
-os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
-
 import sys
 import time
+import logging
 
-print("Pokrećem Isaac Sim u 'headless' načinu rada (bez prozora) za test fizike...")
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
+print("Starting Isaac Sim in 'headless' mode (without window) for physics test...")
 
 try:
     from isaacsim import SimulationApp
-    # Ovdje koristimo headless mod kako se prozor ne bi otvarao dok testiramo u terminalu
+    # Here we use headless mode so the window doesn't open while testing in the terminal
     simulation_app = SimulationApp({"headless": True, "anti_aliasing": 0})
 
-    from omni.isaac.core import World
-    import omni.isaac.core.utils.prims as prims_utils
+    # Optional: Silence internal Isaac Sim logs to keep the terminal clean
+    import carb
+    logging.getLogger("omni").setLevel(logging.ERROR)
+    carb.settings.get_settings().set_string("/log/level", "error")
 
-    print("Stvaram svijet i dodajem fizikalne objekte (podloga i kocka).")
+    from isaacsim.core.api import World
+    import isaacsim.core.utils.prims as prims_utils
+
+    print("Creating the world and adding physics objects (ground and cube).")
     world = World()
     world.scene.add_default_ground_plane()
 
-    # Kocka koja će padati
+    # A falling cube
     prims_utils.create_prim(
-        prim_path="/World/TestKocka",
+        prim_path="/World/TestCube",
         prim_type="Cube",
         position=[0.0, 0.0, 10.0]
     )
 
     world.reset()
 
-    print("Simuliram 200 frame-ova pada kocke...")
+    print("Simulating 200 frames of a falling cube...")
     start_time = time.time()
     for i in range(200):
         world.step(render=False)
     
     elapsed = time.time() - start_time
-    print(f"USPJEH: Simulacija odrađena u {elapsed:.2f} sekundi. Fizikalni engine radi.")
+    print(f"SUCCESS: Simulation completed in {elapsed:.2f} seconds. Physics engine is working.")
 
     simulation_app.close()
     sys.exit(0)
 
 except Exception as e:
-    print(f"\n--- KRITIČNA GREŠKA TIJEKOM SIMULACIJE --- \n{e}")
+    print(f"\n--- CRITICAL ERROR DURING SIMULATION --- \n{e}")
     sys.exit(1)

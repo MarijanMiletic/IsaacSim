@@ -2,6 +2,9 @@
 
 This repository contains robot simulation scripts using NVIDIA Isaac Sim 4.5.0.
 
+## Overview
+The main highlight of this project is a pick-and-place simulation using the **Franka Emika** robot arm. The project utilizes modern object-oriented programming (OOP) practices for the main simulation script and silences verbose internal Isaac Sim logs for a cleaner terminal output.
+
 ## Prerequisites
 
 - **OS:** Windows 10/11 (with NVIDIA GPU)
@@ -42,7 +45,12 @@ pip install -r requirements.txt
 
 ## Running the Simulation
 
-Once installed, you can test the setup with the provided scripts:
+You can easily start the simulations using the provided batch scripts (no need to manually activate the virtual environment):
+
+- **`run_franka.bat`**: Starts the main Franka Pick and Place visual simulation.
+- **`run_headless.bat`**: Starts the physics engine test in headless mode.
+
+Alternatively, you can run them manually from your activated environment:
 
 ```powershell
 # Run the Isaac Sim test script
@@ -50,10 +58,15 @@ python test_isaac.py
 
 # Run the Franka Emika example
 python franka_example.py
+
+# Run the OOP Franka Pick and Place simulation
+python franka_pick_and_place.py
 ```
 
 ## Project Structure
+- `franka_pick_and_place.py`: Main Franka robot arm simulation (OOP structure).
 - `test_isaac.py`: Basic connectivity and simulation test.
-- `franka_example.py`: Franka robot arm simulation example.
+- `franka_example.py`: Franka robot arm minimal example.
 - `test_headless_sim.py`: Script for running simulations without a GUI.
 - `check_env.py`: Utility to verify your Python and CUDA environment.
+- `run_franka.bat` / `run_headless.bat`: 1-click startup scripts.
